@@ -1,12 +1,15 @@
 'use strict';
 (() => {
  let installPrompt = null, registration=null, checking=false, applying=false, reloadAvailable=false;
- const updateButton=document.getElementById('checkUpdate'),updateStatus=document.getElementById('updateStatus');
+ let updateMessage='';
  function syncUpdateButton(){
-  updateButton.disabled=checking||applying;
-  updateButton.textContent=applying?'Aktualizowanie…':checking?'Sprawdzanie…':registration?.waiting||reloadAvailable?'↻ Zaktualizuj teraz':'↻ Sprawdź aktualizacje';
+  document.querySelectorAll('[data-check-update]').forEach(button=>{
+   button.disabled=checking||applying;
+   button.textContent=applying?'Aktualizowanie…':checking?'Sprawdzanie…':registration?.waiting||reloadAvailable?'↻ Zaktualizuj teraz':'↻ Sprawdź aktualizacje';
+  });
+  document.querySelectorAll('[data-update-status]').forEach(node=>{node.textContent=updateMessage;});
  }
- function note(message){updateStatus.textContent=message;syncUpdateButton();}
+ function note(message){updateMessage=message;syncUpdateButton();}
  function activateUpdate(){
   if(!registration?.waiting&&!reloadAvailable)return;
   const perform=()=>{
@@ -22,7 +25,7 @@
    window.confirm('Zaktualizować aplikację?', 'Otwarte okno może zawierać niezapisane zmiany. Aktualizacja je zamknie. Zapisane dane pozostaną na urządzeniu.',perform);
   }else perform();
  }
- updateButton.onclick=async()=>{
+ async function checkUpdate(){
   if(registration?.waiting||reloadAvailable){activateUpdate();return;}
   if(!registration){note('Tryb aktualizacji nie jest jeszcze gotowy. '+status);return;}
   if(navigator.onLine===false){note('Połącz się z internetem, aby sprawdzić aktualizacje.');return;}
@@ -31,6 +34,7 @@
   catch{note('Nie udało się sprawdzić aktualizacji. Sprawdź połączenie i spróbuj ponownie.');}
   finally{checking=false;syncUpdateButton();}
  };
+ document.addEventListener('click',event=>{if(event.target.closest('[data-check-update]'))checkUpdate();});
  navigator.serviceWorker?.addEventListener('controllerchange',()=>{
   if(applying){location.reload();return;}
   reloadAvailable=true;note('Nowa wersja jest gotowa. Kliknij „Zaktualizuj teraz”.');
@@ -47,8 +51,9 @@
    section.querySelector('#pwaInstall').hidden = !installPrompt || standalone();
  }
  // Existing app renders settings after each data change. Reattach only when needed.
- const observer = new MutationObserver(() => { if (!section.isConnected) update(); });
+ const observer = new MutationObserver(() => { if (!section.isConnected) update();syncUpdateButton(); });
  observer.observe(document.getElementById('settings'), {childList:true});
+ observer.observe(document.getElementById('about'), {childList:true});
  section.querySelector('#pwaInstall').onclick = async () => {
    if (!installPrompt) return;
    const prompt = installPrompt; installPrompt = null; update();
@@ -74,13 +79,13 @@
        if (!worker) return;
        worker.addEventListener('statechange', () => {
          if (worker.state === 'redundant' && !registration.active) {status = 'Nie udało się przygotować plików offline. Sprawdź połączenie i otwórz aplikację ponownie.';update();}
-         if (worker.state === 'installed' && registration.active) {status = 'Aktualizacja gotowa. Kliknij przycisk na górze strony. Dane pozostaną zapisane.';note('Nowa wersja jest gotowa do instalacji.');update();}
+         if (worker.state === 'installed' && registration.active) {status = 'Aktualizacja gotowa. Kliknij przycisk w Ustawieniach lub About. Dane pozostaną zapisane.';note('Nowa wersja jest gotowa do instalacji.');update();}
        });
      }
      watch(registration.installing);
      registration.addEventListener('updatefound', () => watch(registration.installing));
      await navigator.serviceWorker.ready;
-     status = registration.waiting ? 'Aktualizacja gotowa. Kliknij „Zaktualizuj teraz” na górze strony.' : 'Gotowa do pracy offline. Tankowania, wydatki i karta działają bez internetu. Regularnie eksportuj kopię.';
+     status = registration.waiting ? 'Aktualizacja gotowa. Kliknij „Zaktualizuj teraz” w Ustawieniach lub About.' : 'Gotowa do pracy offline. Tankowania, wydatki i karta działają bez internetu. Regularnie eksportuj kopię.';
      syncUpdateButton();
      if(registration.waiting)note('Nowa wersja jest gotowa do instalacji.');
      update();
