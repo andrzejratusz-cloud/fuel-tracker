@@ -1,6 +1,40 @@
 'use strict';
 (() => {
- let installPrompt = null;
+ let installPrompt = null, registration=null, checking=false, applying=false, reloadAvailable=false;
+ const updateButton=document.getElementById('checkUpdate'),updateStatus=document.getElementById('updateStatus');
+ function syncUpdateButton(){
+  updateButton.disabled=checking||applying;
+  updateButton.textContent=applying?'Aktualizowanie…':checking?'Sprawdzanie…':registration?.waiting||reloadAvailable?'↻ Zaktualizuj teraz':'↻ Sprawdź aktualizacje';
+ }
+ function note(message){updateStatus.textContent=message;syncUpdateButton();}
+ function activateUpdate(){
+  if(!registration?.waiting&&!reloadAvailable)return;
+  const perform=()=>{
+   if(!registration?.waiting&&!reloadAvailable)return;
+   // Data backup is best effort. No storage is cleared during an update.
+   try{window.backupData?.(localStorage.getItem('fuel-tracker-v1'));}catch{}
+   applying=true;syncUpdateButton();
+   if(reloadAvailable){location.reload();return;}
+   registration.waiting.postMessage({type:'ACTIVATE_UPDATE'});
+   setTimeout(()=>{if(applying){applying=false;note('Aktualizacja trwa dłużej. Spróbuj ponownie lub zamknij i otwórz aplikację.');}},15000);
+  };
+  if(document.querySelector('#entryDialog[open],#carDialog[open],#confirmDialog[open]')){
+   window.confirm('Zaktualizować aplikację?', 'Otwarte okno może zawierać niezapisane zmiany. Aktualizacja je zamknie. Zapisane dane pozostaną na urządzeniu.',perform);
+  }else perform();
+ }
+ updateButton.onclick=async()=>{
+  if(registration?.waiting||reloadAvailable){activateUpdate();return;}
+  if(!registration){note('Tryb aktualizacji nie jest jeszcze gotowy. '+status);return;}
+  if(navigator.onLine===false){note('Połącz się z internetem, aby sprawdzić aktualizacje.');return;}
+  checking=true;note('Sprawdzanie nowej wersji…');
+  try{await registration.update();note(registration.waiting?'Nowa wersja jest gotowa.':registration.installing?'Pobieranie nowej wersji…':'Nie znaleziono nowej wersji.');}
+  catch{note('Nie udało się sprawdzić aktualizacji. Sprawdź połączenie i spróbuj ponownie.');}
+  finally{checking=false;syncUpdateButton();}
+ };
+ navigator.serviceWorker?.addEventListener('controllerchange',()=>{
+  if(applying){location.reload();return;}
+  reloadAvailable=true;note('Nowa wersja jest gotowa. Kliknij „Zaktualizuj teraz”.');
+ });
  let status = 'Przygotowywanie trybu offline…';
  const standalone = () => window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
  const section = document.createElement('div');
@@ -23,6 +57,9 @@
  window.addEventListener('beforeinstallprompt', event => { event.preventDefault(); installPrompt = event; update(); });
  window.addEventListener('appinstalled', () => { installPrompt = null; update(); });
  async function init() {
+   // Ask the browser to retain local data when supported. This is not a backup.
+   try { if(navigator.storage?.persist) await navigator.storage.persist(); } catch {}
+
    if (location.protocol === 'file:') {
      status = 'Podgląd z pliku: instalacja i pamięć offline PWA wymagają HTTPS (lub localhost na komputerze). Dane i funkcje HTML nadal działają lokalnie.';
      update(); return;
@@ -32,18 +69,20 @@
      update(); return;
    }
    try {
-     const registration = await navigator.serviceWorker.register('./sw.js', {scope:'./', updateViaCache:'none'});
+     registration = await navigator.serviceWorker.register('./sw.js', {scope:'./', updateViaCache:'none'});
      function watch(worker) {
        if (!worker) return;
        worker.addEventListener('statechange', () => {
          if (worker.state === 'redundant' && !registration.active) {status = 'Nie udało się przygotować plików offline. Sprawdź połączenie i otwórz aplikację ponownie.';update();}
-         if (worker.state === 'installed' && registration.active) {status = 'Aktualizacja gotowa. Zamknij wszystkie okna aplikacji i uruchom ją ponownie. Dane pozostaną zapisane.';update();}
+         if (worker.state === 'installed' && registration.active) {status = 'Aktualizacja gotowa. Kliknij przycisk na górze strony. Dane pozostaną zapisane.';note('Nowa wersja jest gotowa do instalacji.');update();}
        });
      }
      watch(registration.installing);
      registration.addEventListener('updatefound', () => watch(registration.installing));
      await navigator.serviceWorker.ready;
-     status = registration.waiting ? 'Aktualizacja gotowa. Zamknij wszystkie okna aplikacji i uruchom ponownie.' : 'Gotowa do pracy offline. Tankowania, wydatki i karta działają bez internetu. Regularnie eksportuj kopię.';
+     status = registration.waiting ? 'Aktualizacja gotowa. Kliknij „Zaktualizuj teraz” na górze strony.' : 'Gotowa do pracy offline. Tankowania, wydatki i karta działają bez internetu. Regularnie eksportuj kopię.';
+     syncUpdateButton();
+     if(registration.waiting)note('Nowa wersja jest gotowa do instalacji.');
      update();
    } catch (error) {
      status = 'Nie udało się włączyć trybu offline. Sprawdź HTTPS oraz dostępność plików aplikacji i odśwież stronę.';
