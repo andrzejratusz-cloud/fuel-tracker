@@ -15,7 +15,7 @@
   const perform=()=>{
    if(!registration?.waiting&&!reloadAvailable)return;
    // Data backup is best effort. No storage is cleared during an update.
-   try{window.backupData?.(localStorage.getItem('fuel-tracker-v1'));}catch{}
+   try{window.FuelLocal?.backup();}catch{}
    applying=true;syncUpdateButton();
    if(reloadAvailable){location.reload();return;}
    registration.waiting.postMessage({type:'ACTIVATE_UPDATE'});

@@ -51,3 +51,21 @@ Eksport to CSV UTF-8 z BOM i separatorem średnikowym. Plik nie zawiera ID. Wier
 Import zastępuje cały zbiór danych po potwierdzeniu; ponowny import nie dopisuje duplikatów. ID są generowane automatycznie. Stare kopie JSON nadal można importować. Importowana pełna kopia przywraca także zapisaną w niej historię limitów.
 
 Walidacja v5: 25 kontroli logiki i obsługi formularzy w modelu DOM (Node), w tym historia limitów, migracja starej kopii, kolory samochodów i CSV z wieloma liniami, polskimi znakami oraz nowymi wpisami bez ID. Brak testu w rzeczywistym Safari/iPhonie.
+
+## Aktualizacja v19 — zachowanie danych
+
+Klucz danych fuel-tracker-v1 i format version:1 pozostają stałe niezależnie od numeru wydania aplikacji. Aktualizacja service workera usuwa wyłącznie stare pliki aplikacji z Cache Storage. Nie czyści localStorage. Przy uruchomieniu i przed zapisem aplikacja próbuje zachować lokalną kopię poprawnych danych. W ustawieniach można przywrócić ją po potwierdzeniu. Jest to kopia na tym samym urządzeniu i tej samej witrynie; usunięcie danych witryny może usunąć również kopię. Brak miejsca może uniemożliwić jej zapis, co aplikacja sygnalizuje. Przed zapisem sprawdzamy, czy inne okno nie zmieniło danych. Nieaktualny formularz wymaga odświeżenia. Aplikacja prosi o trwałą pamięć przez Storage API tam, gdzie przeglądarka ją udostępnia; przeglądarka może odmówić.
+
+Aktualizuj istniejącą instalację pod niezmiennym adresem HTTPS, bez usuwania aplikacji, czyszczenia danych strony ani reinstalacji. Zamknij okna i otwórz ponownie po publikacji. Wgraj index.html, sw.js i pwa.js. Na pierwszym przejściu ze starszej wersji warto wcześniej wyeksportować CSV. Mechanizm nie odzyska danych już skasowanych przez system lub użytkownika i nie synchronizuje ich pomiędzy urządzeniami.
+
+Sprawdzono 17 przypadków zachowania danych i aktualizacji w modelu JS: stary format, restart, kopia, uszkodzony zapis, konflikt okien, brak danych i brak miejsca. Nie odtworzono problemu na fizycznym telefonie; przyczyna zgłoszenia wymaga ustalenia sposobu aktualizacji.
+
+## Aktualizacja v20 — przycisk aktualizacji
+
+Na samej górze strony jest przycisk Sprawdź aktualizacje. Pobiera nową wersję przez service worker i pokazuje Zaktualizuj teraz, gdy jest gotowa. Kliknięcie pozwala aktywować przygotowane pliki bez czyszczenia danych. Przy otwartym formularzu pojawia się ostrzeżenie przed utratą niezapisanych zmian. Pozostałe okna z otwartymi formularzami nie są automatycznie przeładowywane. Aktualizacja nie usuwa localStorage, danych aut ani wpisów. Przed aktywacją próbuje zapisać lokalną kopię bezpieczeństwa. Gdy internet nie działa albo sprawdzenie się nie powiedzie, można ponowić próbę. Przycisk wymaga HTTPS lub localhost oraz obsługi service worker. Nie daje gwarancji zachowania danych po wyczyszczeniu pamięci witryny.
+
+Pierwsze wdrożenie przycisku wymaga publikacji index.html, pwa.js i sw.js oraz otwarcia nowej wersji aplikacji. Następne aktualizacje można uruchamiać przyciskiem. Nigdy nie usuwaj danych witryny w celu pobrania aktualizacji. Testy v20: 14 kontroli przycisku w modelu PWA, 17 trwałości danych, 46 aplikacji i 16 analityki. Brak fizycznego testu na Androidzie/iPhonie.
+
+## v25 — opcjonalne współdzielenie
+
+Moduł Supabase jest domyślnie wyłączony. Instrukcja i SQL: supabase/SETUP.md oraz supabase/schema.sql w paczce wydania. Wymaga projektu Supabase, konfiguracji Auth/SMTP i publicznego klucza. Nie uruchomiono jeszcze prawdziwego połączenia. Po połączeniu dane wspólne są oddzielone od lokalnych; synchronizacja używa rewizji i przy konflikcie wymaga wyboru całego zestawu. Nie wykonuje automatycznego scalania wpisów z różnych telefonów. Można wrócić do danych lokalnych lub wyłączyć moduł w konfiguracji.

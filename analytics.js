@@ -6,7 +6,8 @@ const mode=()=>window.matchMedia?.('(display-mode: standalone)').matches||naviga
 function configured(){try{site=new URL(config.siteUrl);return /^G-[A-Z0-9]+$/.test(config.measurementId)&&site.protocol==='https:'&&location.protocol==='https:'&&site.origin===location.origin&&(location.pathname===site.pathname||location.pathname.startsWith(site.pathname.endsWith('/')?site.pathname:site.pathname+'/'));}catch{return false;}}
 const valid=configured();
 try{const saved=JSON.parse(localStorage.getItem(key));if(saved&&['granted','denied'].includes(saved.value)&&saved.expires>Date.now())choice=saved.value;}catch{}
-const gtag=(...args)=>{window.dataLayer=window.dataLayer||[];window.dataLayer.push(args);};
+// gtag.js expects an Arguments command, not a plain Array.
+function gtag(){window.dataLayer=window.dataLayer||[];window.dataLayer.push(arguments);}
 function start(){if(!valid||choice!=='granted'||navigator.onLine===false||started)return;
  started=true;enabled=true;window['ga-disable-'+config.measurementId]=false;
  gtag('consent','default',{analytics_storage:'granted',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});
