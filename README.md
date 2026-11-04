@@ -93,3 +93,7 @@ Konwerter heic2any został zastąpiony heic-to 1.6.7 z nowszym libheif. Próba n
 Zweryfikowano rzeczywiste dekodowanie publicznego examples/example.heic z repozytorium strukturag/libheif nowym dekoderem: 1280x854 piksele, test w Node z adapterem Web Worker. Sprawdzono też model formularza i parser. Nie sprawdzono konkretnego pliku użytkownika ani wydajności na jego iPhonie.
 
 Publikacja: index.html, receipt.js, sw.js.
+
+## v30 — reguły tabeli paliwa
+
+Koszt: SUMA/Kwota, potem Wartość pozycji. Tabela Cena jm Ilość VAT Wartość rozdziela cenę za litr przed jm L oraz ilość i kwotę za jednostką. Nie naprawiamy automatycznie B21 na 6,21 bez innych dowodów. Data i Data/czas mogą mieć wartość w kolejnym wierszu. Licznik pochodzi wyłącznie z pola Przebieg. Brakującą liczbę litrów obliczamy jako kwota/cena za litr; brakującą kwotę jako litry*cena. Obliczenia są oznaczane w komunikacie OCR, nie zastępują rozpoznanych wartości i wymagają sprawdzenia. Niezgodność wszystkich trzech wartości daje ostrzeżenie. Testy obejmują tekst klienta, koszt z Kwota/Wartość i brakujące wartości tabeli.
