@@ -2,6 +2,13 @@
 (() => {
  'use strict';
  const dictionary={
+ "Historia tego samego dnia pokazuje najpierw ostatnio dodany wpis. Edycja zachowuje kolejność.": "Entries on the same day show the most recently added first. Editing preserves their order.",
+ "— Uzupełnione release notes i numer wersji oraz krótsze nagłówki Ustawień i About.": "— Updated release notes and version number, with more compact Settings and About headings.",
+ "Uzupełnione release notes i numer wersji oraz krótsze nagłówki Ustawień i About.": "Updated release notes and version number, with more compact Settings and About headings.",
+ "— Prosta instrukcja współdzielenia w czterech krokach i usunięte oznaczenie eksperymentalne.": "— Simple four-step sharing instructions and removal of the experimental label.",
+ "Prosta instrukcja współdzielenia w czterech krokach i usunięte oznaczenie eksperymentalne.": "Simple four-step sharing instructions and removal of the experimental label.",
+ "— Włączone współdzielenie garażu i konfiguracja połączenia z Supabase.": "— Enabled garage sharing and configured the Supabase connection.",
+ "Włączone współdzielenie garażu i konfiguracja połączenia z Supabase.": "Enabled garage sharing and configured the Supabase connection.",
  "Twoje auto. Twoja kontrola.": "Your car. Your control.",
  "Brak samochodu": "No car",
  "Podsumowanie": "Overview",
@@ -279,7 +286,11 @@
  "Zsynchronizowano": "Synced",
  "Połączono wspólny garaż. Dane lokalne zachowano osobno.": "Shared garage connected. Local data has been kept separately.",
  "Tryb lokalny. Dane wspólnego garażu pozostają w osobnym zapisie.": "Local mode. Shared garage data remains in separate storage.",
- "Współdzielenie aplikacji · eksperymentalne": "App sharing · experimental",
+ "Współdzielenie aplikacji": "App sharing",
+ "Podaj swój e-mail, kliknij „Wyślij kod” i zaloguj się kodem z wiadomości. Następnie wybierz „Utwórz garaż z moich danych”.": "Enter your email, select “Send code” and sign in using the code from the email. Then select “Create garage from my data”.",
+ "Podaj e-mail osoby, z którą chcesz współdzielić garaż, i kliknij „Zapisz zaproszenie”.": "Enter the email of the person you want to share the garage with and select “Save invitation”.",
+ "Druga osoba otwiera tę samą aplikację na swoim urządzeniu i loguje się własnym e-mailem, używając kodu z wiadomości.": "The other person opens the same app on their device and signs in with their own email using the code from the email.",
+ "Po zalogowaniu druga osoba wybiera „Odśwież zaproszenia”, a następnie „Dołącz” przy nazwie garażu.": "After signing in, the other person selects “Refresh invitations”, then “Join” next to the garage name.",
  "Opcjonalny wspólny garaż dla dwóch osób. Dane lokalne pozostają osobno. Logowanie nie przesyła danych do Google Analytics.": "An optional shared garage for two people. Local data stays separate. Sign-in details are not sent to Google Analytics.",
  "Moduł nie jest jeszcze podłączony. Wymaga projektu Supabase i konfiguracji administratora.": "This module is not connected yet. A Supabase project and administrator configuration are required.",
  "Moduł nie jest jeszcze podłączony. Wymaga konfiguracji Supabase.": "This module is not connected yet. Supabase configuration is required.",

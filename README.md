@@ -105,3 +105,19 @@ Przełącznik języka znajduje się w nagłówku, po wyborze samochodu. Wybór j
 Plik i18n.js zawiera słownik i warstwę tłumaczenia interfejsu. Nowe komunikaty należy dodać do słownika. Testy: 23 kontroli przełączania języka i ochrony danych; audyt tekstów głównych widoków i formularza; regresje aplikacji, kopii, OCR, PWA i współdzielenia. Nie wykonano fizycznego testu na telefonie.
 
 Publikacja z v31: index.html, sw.js, i18n.js i sharing.js. Pozostaw pozostałe zasoby. Zaktualizuj aplikację przyciskiem w Ustawieniach/About.
+
+## v35 — konfiguracja Supabase
+Włączono współdzielenie i ustawiono publiczny klucz projektu. Wgraj sharing-config.js oraz sw.js pod dotychczasowym adresem aplikacji. Projekt wymaga uruchomienia schema.sql oraz konfiguracji Email/SMTP i szablonów kodu OTP. Nie zweryfikowano rzeczywistego logowania ani synchronizacji dwóch kont.
+
+
+## v36 — prostsza instrukcja współdzielenia
+Cztery kroki logowania, tworzenia garażu, zapraszania i dołączania w PL/EN. Usunięto oznaczenie eksperymentalne z interfejsu. Publikacja: index.html, sharing.js, i18n.js i sw.js. Konfiguracja Supabase z v35 zachowana.
+
+
+## v37 — release notes i nagłówki
+Uzupełniono wpisy v35–v37 i numer wersji About. Usunięto podpisy nad Ustawieniami i About oraz górny margines ich nagłówków. Publikacja: index.html, i18n.js i sw.js. Zachowano konfigurację Supabase.
+
+
+## v38 — kolejność historii
+Wpisy są sortowane malejąco według daty, a przy tej samej dacie w odwrotnej kolejności zapisu. Edycja zachowuje miejsce wpisu. Starsze dane korzystają z zachowanej kolejności w zbiorze; wcześniejszej kolejności przed dawnymi edycjami lub importem nie da się odtworzyć. Publikacja: index.html, i18n.js, sw.js.
+
