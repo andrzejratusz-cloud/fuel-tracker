@@ -121,3 +121,14 @@ Uzupełniono wpisy v35–v37 i numer wersji About. Usunięto podpisy nad Ustawie
 ## v38 — kolejność historii
 Wpisy są sortowane malejąco według daty, a przy tej samej dacie w odwrotnej kolejności zapisu. Edycja zachowuje miejsce wpisu. Starsze dane korzystają z zachowanej kolejności w zbiorze; wcześniejszej kolejności przed dawnymi edycjami lub importem nie da się odtworzyć. Publikacja: index.html, i18n.js, sw.js.
 
+
+## v41 — OCR paliwa i limit 984 zł
+Parser wybiera wartość pozycji paliwowej i zwraca sumę paragonu osobno. Odczytuje kolumny ceny, litrów i wartości, rekonstruuje podzielone wiersze, koryguje znaki wyłącznie w liczbach i sprawdza zgodność z zaokrągleniami. Wyniki wyliczone i sprzeczne wymagają przycisku potwierdzenia przed uzupełnieniem formularza. Cena za litr jest edytowalna, jej zmiana aktualizuje koszt na podstawie litrów. Nowe dane aplikacji mają limit 984 zł, zapisane limity pozostają zachowane.
+Publikacja wymaga index.html, receipt.js, i18n.js i sw.js.
+Sprawdzono 7 referencyjnych paragonów BP, 13 wariantów błędów i regresje aplikacji, skanowania, trwałości, współdzielenia, PWA, języków i analityki. Rzeczywisty IMG_4775.jpg daje 128,05 zł i 20,62 l, a uszkodzona cena jest wyliczana pomocniczo jako 6,21 zł/l z niską pewnością. Nie wykonano fizycznego testu aparatu na iPhonie. Silnik używa tekstu OCR, rekonstrukcja nie korzysta ze współrzędnych bloków.
+
+
+## v42 — potwierdzenie uszkodzonego odczytu paliwa
+Test przeglądarkowy zwrócił wiersz 1ENI95-A B21 TL z błędną ilością 20,67 zamiast widocznych na zdjęciu 20,62. Parser rozpoznaje teraz uszkodzoną nazwę i jednostkę TL w tabeli. Wynik ma niską pewność i ostrzeżenie wymagające sprawdzenia zdjęcia. Zapasowa ścieżka rozpoznaje nagłówki z polskimi znakami i również wymaga potwierdzenia. Formularz nie jest automatycznie uzupełniany takim wynikiem. Weryfikację obejmuje dokładny tekst błędu z przeglądarki oraz test obsługi formularza.
+Publikacja wymaga index.html, receipt.js, i18n.js i sw.js. Nie poprawiamy arbitralnie odczytanej cyfry 7 na 2. Dla tego zdjęcia użytkownik powinien porównać odczyt z paragonem i wpisać 20,62 l oraz 6,21 zł/l.
+
