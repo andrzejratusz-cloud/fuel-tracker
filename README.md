@@ -132,3 +132,8 @@ Sprawdzono 7 referencyjnych paragonów BP, 13 wariantów błędów i regresje ap
 Test przeglądarkowy zwrócił wiersz 1ENI95-A B21 TL z błędną ilością 20,67 zamiast widocznych na zdjęciu 20,62. Parser rozpoznaje teraz uszkodzoną nazwę i jednostkę TL w tabeli. Wynik ma niską pewność i ostrzeżenie wymagające sprawdzenia zdjęcia. Zapasowa ścieżka rozpoznaje nagłówki z polskimi znakami i również wymaga potwierdzenia. Formularz nie jest automatycznie uzupełniany takim wynikiem. Weryfikację obejmuje dokładny tekst błędu z przeglądarki oraz test obsługi formularza.
 Publikacja wymaga index.html, receipt.js, i18n.js i sw.js. Nie poprawiamy arbitralnie odczytanej cyfry 7 na 2. Dla tego zdjęcia użytkownik powinien porównać odczyt z paragonem i wpisać 20,62 l oraz 6,21 zł/l.
 
+
+## v43 — opcjonalne litry i przebieg
+Tankowanie można zapisać z pustymi litrami i przebiegiem. Braki są przechowywane jako null, zachowywane przy edycji, eksporcie i imporcie CSV i pokazywane w historii jako kreska. Wpis z brakującymi danymi przerywa odcinek obliczania spalania. Suma litrów uwzględnia podane ilości, a przebieg i dystans korzystają z dostępnych odczytów licznika. Podane litry nadal muszą być dodatnie, przebieg nieujemny.
+Publikacja wymaga index.html, i18n.js i sw.js. Wszystkie urządzenia używające wspólnego garażu powinny otrzymać v43, ponieważ starsze wersje walidatora wymagają kompletnych pól tankowania.
+

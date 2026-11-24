@@ -2,6 +2,10 @@
 (() => {
  'use strict';
  const dictionary={
+ "Litry i przebieg możesz zostawić puste. Niepełny wpis przerywa obliczanie spalania dla danego odcinka.": "You can leave litres and odometer blank. An incomplete entry interrupts fuel consumption calculation for that interval.",
+ "Liczba litrów (opcjonalnie)": "Litres (optional)",
+ "Przebieg (km, opcjonalnie)": "Odometer (km, optional)",
+ "Litry i przebieg przy tankowaniu są opcjonalne.": "Litres and odometer are optional for refuelling.",
  "Nie odczytano wiarygodnie wiersza paliwa. Sprawdź litry i cenę na zdjęciu przed potwierdzeniem.": "The fuel row could not be read reliably. Check litres and price against the photo before confirming.",
  "Nazwa lub cena paliwa jest nieczytelna. Sprawdź litry i cenę na zdjęciu przed potwierdzeniem.": "The fuel name or price is unreadable. Check litres and price against the photo before confirming.",
  "Uszkodzony wiersz paliwa wymaga potwierdzenia odczytu.": "A damaged fuel row requires confirmation of the reading.",
